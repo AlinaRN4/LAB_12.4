@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClassLibrary10lab;
-namespace Лабораторная_работа_12._4
+namespace lab13
 {
     public class Point<T>
     {
         public T? Data { get; set; }
         public Point<T>? Next { get; set; }
         public Point<T>? Prev { get; set; }
-
         public Point()
         {
             this.Data = default(T);

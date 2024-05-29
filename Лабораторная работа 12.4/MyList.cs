@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClassLibrary10lab;
-namespace Лабораторная_работа_12._4
+namespace lab13
 {
     public class MyList<T> where T : IInit, ICloneable, new()
     {
         public Point<T>? head = null;
         public Point<T>? tail = null;
+        public Point<T>? beg = null;
 
         int count = 0;
 
@@ -72,12 +73,10 @@ namespace Лабораторная_работа_12._4
                 tail = head;
             }
         }
-
         public MyList() { }
-
         public MyList(int size)
         {
-            if (size <= 0) throw new Exception("size меньше нуля");
+            if (size <= 0) throw new Exception("размер меньше нуля");
             head = MakeRandomData();
             tail = head;
             for (int i = 1; i < size; i++)
@@ -87,11 +86,10 @@ namespace Лабораторная_работа_12._4
             }
             count = size;
         }
-
         public void PrintList()
         {
             if (count == 0)
-                Console.WriteLine("the list is empty");
+                Console.WriteLine("Лист пустой");
             Point<T>? current = head;
             for (int i = 0; current != null; i++)
             {
@@ -99,7 +97,6 @@ namespace Лабораторная_работа_12._4
                 current = current.Next;
             }
         }
-
         public Point<T>? FindItem(T item)
         {
             Point<T>? current = head;
@@ -113,9 +110,6 @@ namespace Лабораторная_работа_12._4
             }
             return null;
         }
-
-       
-
         public MyList<T> Clone()
         {
             MyList<T> newList = new MyList<T>();
@@ -131,65 +125,44 @@ namespace Лабораторная_работа_12._4
 
             return newList;
         }
-
         public void Clear()
         {
             head = null;
             tail = null;
             count = 0;
         }
-
-        public bool RemoveLastItemWithSpecifiedData(Func<T, object> dataSelector, object data)
+        public bool Remove(T item)
         {
-            if (count == 0)
-            {
-                throw new Exception("the list is empty");
-            }
-
-            Point<T>? current = tail;
-
+            Point<T>? current = head;
             while (current != null)
             {
-                if (current.Data != null)
+                if (current.Data.Equals(item))
                 {
-                    var currentData = dataSelector(current.Data);
-
-                    if (currentData != null && currentData.Equals(data))
+                    if (current.Prev != null)
                     {
-                        // Удаляем последний элемент с заданными данными
-                        Point<T>? prev = current.Prev;
-                        Point<T>? next = current.Next;
-
-                        if (prev != null)
-                        {
-                            prev.Next = next;
-                        }
-                        else
-                        {
-                            // Удаляемый элемент - первый в списке
-                            head = next;
-                        }
-
-                        if (next != null)
-                        {
-                            next.Prev = prev;
-                        }
-                        else
-                        {
-                            // Удаляемый элемент - последний в списке
-                            tail = prev;
-                        }
-
-                        count--;
-                        return true;
+                        current.Prev.Next = current.Next;
                     }
+                    else
+                    {
+                        head = current.Next;
+                    }
+
+                    if (current.Next != null)
+                    {
+                        current.Next.Prev = current.Prev;
+                    }
+                    else
+                    {
+                        tail = current.Prev;
+                    }
+
+                    //Count--;
+                    
+                    return true;
                 }
-
-                current = current.Prev;
+                current = current.Next;
             }
-
-            Console.WriteLine("Элемент с заданными данными не найден.");
-            return false; // Не найден элемент с заданными данными
+            return false;
         }
         public override bool Equals(object? obj)
         {

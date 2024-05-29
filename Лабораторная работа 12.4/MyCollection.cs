@@ -5,25 +5,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClassLibrary10lab;
-namespace Лабораторная_работа_12._4
+namespace lab13
 {
     public class MyCollection<T> : MyList<T>, IEnumerable<T> where T : IInit, ICloneable, new()
     {
         public MyCollection() : base() { }
         public MyCollection(int size) : base(size) { }
-        //public MyCollection(T[] collection) : base(collection) { }
-
+        public int Count { get; set; }
         public IEnumerator<T> GetEnumerator()
         {
             return new MyEnumerator<T>(this);
         }
-
         IEnumerator IEnumerable.GetEnumerator()
         {
             throw new NotImplementedException();
         }
-    }
 
+        
+    }
     public class MyEnumerator<T> : IEnumerator<T> where T : IInit, ICloneable, new()
     {
         Point<T>? beg;
@@ -34,16 +33,12 @@ namespace Лабораторная_работа_12._4
             beg = collection.head;
             current = beg;
         }
-
         public T Current => current.Data;
-
         object IEnumerator.Current => throw new NotImplementedException();
-
         public void Dispose()
         {
 
         }
-
         public bool MoveNext()
         {
             if (current == null || current.Next == null || current.Data == null)
@@ -58,10 +53,11 @@ namespace Лабораторная_работа_12._4
             }
             
         }
-
         public void Reset()
         {
             current = beg;
         }
+
+        
     }
 }
